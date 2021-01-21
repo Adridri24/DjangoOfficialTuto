@@ -1,0 +1,39 @@
+version: "3.9"
+   
+services:
+  db:
+    image: postgres
+    container_name: postgresql
+    environment:
+      - POSTGRES_DB=DjangoOfficialTuto
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD="django"
+      - POSTGRES_PORT=5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    restart: always
+  web:
+    build: .
+    container_name: DjangoOfficialTuto_web
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    restart: always
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgAdmin
+    depends_on:
+      - db
+    ports:
+      - "5051:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: adrien.jayat@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: root
+    restart: always
+
+volumes:
+  postgres_data:
