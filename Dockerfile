@@ -1,15 +1,12 @@
-FROM python:3.9-alpine
+FROM python:3.9-slim
+# slim=debian-based. Not using alpine because it has poor python3 support.
 ENV PYTHONUNBUFFERED=1
 WORKDIR /code
 COPY requirements.txt /code/
 
-# Install individual dependencies
-RUN apk add --update --no-cache postgresql-client postgresql-libs
-RUN apk add --update --no-cache --virtual .tmp-build-deps gcc musl-dev libc-dev linux-headers postgresql-dev
-
-RUN pip install -r requirements.txt
-
-# Remove dependencies
-RUN apk del .tmp-build-deps
+RUN apt-get -qq update && apt-get -qq install -y libpq-dev gcc
+# need gcc to compile psycopg2
+RUN pip3 install -r requirements.txt
+RUN apt-get -qq autoremove -y gcc
 
 COPY . /code/

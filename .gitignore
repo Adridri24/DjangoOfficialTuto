@@ -1,4 +1,7 @@
 /.vscode
 /.git
 /.idea
-*/__pycache__
+*/__pycache__/
+/postgres_data/
+/.env
+/venv/

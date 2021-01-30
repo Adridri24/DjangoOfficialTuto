@@ -7,10 +7,8 @@ services:
     environment:
       - POSTGRES_DB=DjangoOfficialTuto
       - POSTGRES_USER=root
-      - POSTGRES_PASSWORD="django"
+      - POSTGRES_PASSWORD=django
       - POSTGRES_PORT=5432
-    volumes:
-      - postgres_data:/var/lib/postgresql/data/
     restart: always
   web:
     build: .
@@ -34,6 +32,3 @@ services:
       PGADMIN_DEFAULT_EMAIL: adrien.jayat@gmail.com
       PGADMIN_DEFAULT_PASSWORD: root
     restart: always
-
-volumes:
-  postgres_data:
