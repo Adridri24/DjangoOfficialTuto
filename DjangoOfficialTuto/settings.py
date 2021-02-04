@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 import os
+import mimetypes
+
 import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -20,14 +22,14 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("SECRET_KEY", "6gGyhqffhxbON6PLPX7TlaI^z3d$-Nq$Es+")
-
 # SECURITY WARNING: don't run with debug turned on in production!
-if os.environ.get("ENV") == "PRODUCTION":
-    DEBUG = False
-else:
+if os.getenv("ENV") == "DEVELOPMENT":
     DEBUG = True
+    SECRET_KEY = "development_key"
+else:
+    DEBUG = False
+    # SECURITY WARNING: keep the secret key used in production secret!
+    SECRET_KEY = os.getenv("SECRET_KEY")
 
 # Application definition
 
@@ -38,7 +40,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    'polls.apps.PollsConfig'
+    "polls.apps.PollsConfig",
+    "debug_toolbar"
 ]
 
 MIDDLEWARE = [
@@ -50,6 +53,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
+    "debug_toolbar.middleware.DebugToolbarMiddleware"
 ]
 
 ROOT_URLCONF = "DjangoOfficialTuto.urls"
@@ -82,12 +86,11 @@ DATABASES = {
         "NAME": "DjangoOfficialTuto",
         "USER": "root",
         "PASSWORD": "django",
-        "HOST": os.environ.get("DATABASE_URL", "db"),
+        "HOST": "db",
         "PORT": 5432,  # default postgres port
     }
 }
-if os.environ.get('ENV') == 'PRODUCTION':
-    # ...
+if not DEBUG:
     db_from_env = dj_database_url.config(conn_max_age=500)
     DATABASES['default'].update(db_from_env)
 
@@ -129,14 +132,18 @@ USE_TZ = True
 
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATIC_URL = "/static/"
-#STATICFILES_DIRS = (
-#    os.path.join(BASE_DIR, "static"),
-#)
-if os.environ.get("ENV") == "PRODUCTION":
+# STATICFILES_DIRS = (
+#     os.path.join(BASE_DIR, "static"),
+# )
+if not DEBUG:
     # Simplified static file serving.
     # https://warehouse.python.org/project/whitenoise/
     STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-
+else:
+    # Django debug toolbar
+    mimetypes.add_type('application/javascript', '.js', True)
+    # 172.22.0.1 is commonly the gateway adress of docker container
+    INTERNAL_IPS = ["172.22.0.1", "127.0.0.1"]
 
 ALLOWED_HOSTS = ["djangoofficialtuto.herokuapp.com", "127.0.0.1", "localhost"]
 

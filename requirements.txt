@@ -3,3 +3,5 @@ gunicorn
 psycopg2
 whitenoise
 dj_database_url
+django-debug-toolbar>=3.0,<4.0
+python-dotenv

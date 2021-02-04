@@ -1,4 +1,4 @@
-version: "3.9"
+version: "3"
    
 services:
   db:
@@ -9,6 +9,8 @@ services:
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=django
       - POSTGRES_PORT=5432
+    ports:
+      - "32768:5432"
     restart: always
   web:
     build: .
@@ -21,14 +23,14 @@ services:
     depends_on:
       - db
     restart: always
-  pgadmin:
-    image: dpage/pgadmin4
-    container_name: pgAdmin
-    depends_on:
-      - db
-    ports:
-      - "5051:80"
-    environment:
-      PGADMIN_DEFAULT_EMAIL: adrien.jayat@gmail.com
-      PGADMIN_DEFAULT_PASSWORD: root
-    restart: always
+  # pgadmin:
+  #   image: dpage/pgadmin4
+  #   container_name: pgAdmin
+  #   depends_on:
+  #     - db
+  #   ports:
+  #     - "5051:80"
+  #   environment:
+  #     PGADMIN_DEFAULT_EMAIL: adrien.jayat@gmail.com
+  #     PGADMIN_DEFAULT_PASSWORD: root
+  #   restart: always
