@@ -1,1 +1,1 @@
-web: gunicorn DjangoOfficialTuto.wsgi
+web: gunicorn DjangoOfficialTuto.wsgi --log-file -
