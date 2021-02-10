@@ -27,10 +27,12 @@ load_dotenv()
 if os.getenv("ENV") == "DEVELOPMENT":
     DEBUG = True
     SECRET_KEY = "development_key"
-else:
+elif os.getenv("ENV") == "PRODUCTION":
     DEBUG = False
     # SECURITY WARNING: keep the secret key used in production secret!
     SECRET_KEY = os.getenv("SECRET_KEY")
+else:
+    raise KeyError("The environment variable ENV must be set to PRODUCTION or DEVELOPMENT")
 
 # Application definition
 
@@ -84,11 +86,11 @@ WSGI_APPLICATION = "DjangoOfficialTuto.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "DjangoOfficialTuto",
-        "USER": "root",
-        "PASSWORD": "django",
         "HOST": "db",
-        "PORT": 5432,  # default postgres port
+        "NAME": "DjangoOfficialTuto",
+        "USER": os.getenv("DB_USER"),
+        "PASSWORD": os.getenv("DB_PASSWORD"),
+        "PORT": 5432
     }
 }
 if not DEBUG:
@@ -130,22 +132,19 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
-
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATIC_URL = "/static/"
-# STATICFILES_DIRS = (
-#     os.path.join(BASE_DIR, "static"),
-# )
+
 if not DEBUG:
     # Simplified static file serving.
     # https://warehouse.python.org/project/whitenoise/
     STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+    ALLOWED_HOSTS = [os.getenv("APP_NAME", "DjangoOfficialTuto").lower() + ".herokuapp.com"]
 else:
     # Django debug toolbar
     mimetypes.add_type('application/javascript', '.js', True)
     # 172.22.0.1 is commonly the gateway adress of docker container
-    INTERNAL_IPS = ["172.22.0.1", "127.0.0.1"]
-
-ALLOWED_HOSTS = ["djangoofficialtuto.herokuapp.com", "127.0.0.1", "localhost"]
+    INTERNAL_IPS = [os.getenv("DOCKER_GATEWAY"), "127.0.0.1"]
+    ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
 
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
