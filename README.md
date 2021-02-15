@@ -9,7 +9,7 @@ ENV=DEVELOPMENT
 DB_USER=<your_username>
 DB_PASSWORD=<your_password>
 
-DOCKER_GATEWAY=172.22.0.1
+CONTAINER_ADDRESS=<container_address> (docker inspect DjangoOfficialTuto_web)
 ```
 
 ### Run the development server with docker:

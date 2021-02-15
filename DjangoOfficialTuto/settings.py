@@ -132,7 +132,6 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATIC_URL = "/static/"
 
 if not DEBUG:
@@ -143,8 +142,8 @@ if not DEBUG:
 else:
     # Django debug toolbar
     mimetypes.add_type('application/javascript', '.js', True)
-    # 172.22.0.1 is commonly the gateway adress of docker container
-    INTERNAL_IPS = [os.getenv("DOCKER_GATEWAY"), "127.0.0.1"]
-    ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
+    # docker inspect <container_name> to see the gateway address of docker container
+    INTERNAL_IPS = (os.getenv("CONTAINER_GATEWAY"), "127.0.0.1")
+    ALLOWED_HOSTS = ("127.0.0.1", "localhost")
 
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
