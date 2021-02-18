@@ -12,12 +12,13 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 import os
 import mimetypes
+from pathlib import Path
 
 import dj_database_url
 from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 
 load_dotenv()
 # Quick-start development settings - unsuitable for production
@@ -64,7 +65,7 @@ ROOT_URLCONF = "DjangoOfficialTuto.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        'DIRS': [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -132,7 +133,7 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+STATIC_ROOT = BASE_DIR / "staticfiles"
 STATIC_URL = "/static/"
 
 if not DEBUG:
